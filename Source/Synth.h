@@ -12,6 +12,7 @@
 
 #include <JuceHeader.h>
 #include "Voice.h"
+#include "NoiseGenerator.h"
 
 class Synth
 {
@@ -30,4 +31,5 @@ private:
 
     void noteOn(int note, int velocity);
     void noteOff(int note);
+    NoiseGenerator noiseGen;
 };

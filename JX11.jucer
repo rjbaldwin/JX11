@@ -5,6 +5,8 @@
               companyEmail="info@rjbaldwin.com" pluginFormats="buildVST3" pluginCharacteristicsValue="pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn">
   <MAINGROUP id="S4Zy8S" name="JX11">
     <GROUP id="{B6AA4238-5FD1-E662-395C-73132C1D9430}" name="Source">
+      <FILE id="mKbLZ7" name="NoiseGenerator.h" compile="0" resource="0"
+            file="Source/NoiseGenerator.h"/>
       <FILE id="mJ0iHp" name="Voice.h" compile="0" resource="0" file="Source/Voice.h"/>
       <FILE id="COqr9y" name="Synth.cpp" compile="1" resource="0" file="Source/Synth.cpp"/>
       <FILE id="zIZRZU" name="Synth.h" compile="0" resource="0" file="Source/Synth.h"/>
