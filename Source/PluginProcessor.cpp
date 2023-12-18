@@ -202,22 +202,39 @@ juce::AudioProcessorValueTreeState::ParameterLayout JX11AudioProcessor::createPa
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
     // parameters to be added here later
-    layout.add(std::make_unique<juce::AudioParameterChoice>(ParameterID::polyMode, 
-                                                            "Polyphony", 
-                                                            juce::StringArray{ "Mono", "Poly" }, 
-                                                            1));
+    layout.add(std::make_unique<juce::AudioParameterChoice>(
+        ParameterID::polyMode, 
+        "Polyphony", 
+        juce::StringArray{ "Mono", "Poly" }, 
+        1));
 
-    layout.add(std::make_unique<juce::AudioParameterFloat>(ParameterID::oscTune, 
-                                                            "Osc Tune", 
-                                                            juce::NormalisableRange<float>(-24.0f,24.0f,1.0f), 
-                                                            -12.0f, 
-                                                            juce::AudioParameterFloatAttributes().withLabel("semi")));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+        ParameterID::oscTune, 
+        "Osc Tune", 
+        juce::NormalisableRange<float>(-24.0f,24.0f,1.0f), 
+        -12.0f, 
+        juce::AudioParameterFloatAttributes().withLabel("semi")));
 
-    layout.add(std::make_unique<juce::AudioParameterFloat>(ParameterID::oscFine,
-                                                            "Osc Fine",
-                                                            juce::NormalisableRange<float>(-50.0f, 50.0f, 0.1f, 0.3f,true),
-                                                            0.0f,
-                                                            juce::AudioParameterFloatAttributes().withLabel("Cent")));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+        ParameterID::oscFine,
+        "Osc Fine",
+        juce::NormalisableRange<float>(-50.0f, 50.0f, 0.1f, 0.3f,true),
+        0.0f,
+        juce::AudioParameterFloatAttributes().withLabel("Cent")));
+
+    auto oscMixStringFromValue = [](float value, int)
+        {
+            char s[16] = { 0 };
+            snprintf(s, 16, "%4.0f:%2.0f", 100.0 - 0.5f * value, 0.5f * value);
+            return juce::String(s);
+        };
+
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+        ParameterID::oscMix,
+        "Osc Mix",
+        juce::NormalisableRange<float>(0.0f, 100.0f),
+        0.0f,
+        juce::AudioParameterFloatAttributes().withLabel("%").withStringFromValueFunction(oscMixStringFromValue)));
 
     return layout;
 }
