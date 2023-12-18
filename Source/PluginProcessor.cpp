@@ -197,6 +197,15 @@ void JX11AudioProcessor::render(juce::AudioBuffer<float>& buffer, int sampleCoun
     synth.render(outputBuffers, sampleCount);
 }
 
+juce::AudioProcessorValueTreeState::ParameterLayout JX11AudioProcessor::createParameterLayout()
+{
+    juce::AudioProcessorValueTreeState::ParameterLayout layout;
+
+    // parameters to be added here later
+
+    return layout;
+}
+
 //==============================================================================
 bool JX11AudioProcessor::hasEditor() const
 {
