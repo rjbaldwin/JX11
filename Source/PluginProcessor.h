@@ -49,7 +49,7 @@ namespace ParameterID
 
 
 
-class JX11AudioProcessor  : public juce::AudioProcessor
+class JX11AudioProcessor  : public juce::AudioProcessor, private juce::ValueTree::Listener
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -94,6 +94,7 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters",createParameterLayout() };
+    
 
 private:
 
@@ -131,6 +132,15 @@ private:
     juce::AudioParameterFloat* tuningParam;
     juce::AudioParameterFloat* outputLevelParam;
     juce::AudioParameterChoice* polyModeParam;
+
+    void valueTreePropertyChanged(juce::ValueTree&, const juce::Identifier&) override
+    {
+        parametersChanged.store(true);
+    }
+
+    void update();
+
+    std::atomic<bool> parametersChanged{ false };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JX11AudioProcessor)

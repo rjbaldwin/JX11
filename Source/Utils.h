@@ -45,7 +45,7 @@ inline void protectYourEars(float* buffer, int sampleCount)
             }
             buffer[i] = -1.0f;
         }
-        else if(x > 1.0f)
+        else if (x > 1.0f)
         {
             if (firstWarning)
             {
@@ -59,8 +59,16 @@ inline void protectYourEars(float* buffer, int sampleCount)
             memset(buffer, 0, sampleCount * sizeof(float));
             return;
         }
-      
+
     }
 
+    
 
+}
+
+template<typename T>
+inline static void castParameter(juce::AudioProcessorValueTreeState& apvts, const juce::ParameterID& id, T& destination)
+{
+    destination = dynamic_cast<T>(apvts.getParameter(id.getParamID()));
+    jassert(destination); // parameter does not exist or wrong type
 }
