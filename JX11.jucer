@@ -12,6 +12,7 @@
       <FILE id="mJ0iHp" name="Voice.h" compile="0" resource="0" file="Source/Voice.h"/>
       <FILE id="COqr9y" name="Synth.cpp" compile="1" resource="0" file="Source/Synth.cpp"/>
       <FILE id="zIZRZU" name="Synth.h" compile="0" resource="0" file="Source/Synth.h"/>
+      <FILE id="utrrXt" name="Preset.h" compile="0" resource="0" file="Source/Preset.h"/>
       <FILE id="hSlTlA" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="sSHpAu" name="PluginProcessor.h" compile="0" resource="0"
