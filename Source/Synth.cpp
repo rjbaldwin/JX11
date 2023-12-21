@@ -47,7 +47,7 @@ void Synth::render(float** outputBuffers, int sampleCount)
         float output = 0.0f;
         if (voice.note > 0)
         {
-            output = voice.render() + noise;
+            output = voice.render(noise);
         }
         // 5
         outputBufferLeft[sample] = output;
@@ -96,13 +96,15 @@ void Synth::noteOn(int note, int velocity)
     voice.osc.amplitude = (velocity / 127.0f) * 0.5f;
     voice.osc.period = sampleRate / freq;
     voice.osc.reset();
+    voice.env.level = 1.0f;
+    voice.env.multiplier = envDecay;
 }
 
 void Synth::noteOff(int note)
 {
-    if (voice.note == note)
+   /* if (voice.note == note)
     {
         voice.note = 0;
        
-    }
+    }*/
 }

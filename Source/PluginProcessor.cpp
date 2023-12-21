@@ -262,6 +262,15 @@ void JX11AudioProcessor::splitBufferByEvents(juce::AudioBuffer<float>& buffer, j
 
 void JX11AudioProcessor::handleMIDI(uint8_t data0, uint8_t data1, uint8_t data2)
 {
+    // Programme change
+    if ((data0 & 0xF0) == 0xC0)
+    {
+        if (data1 < presets.size())
+        {
+            setCurrentProgram(data1);
+        }
+    }
+
     synth.midiMessage(data0, data1, data2);
 }
 
@@ -503,6 +512,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout JX11AudioProcessor::createPa
 
 void JX11AudioProcessor::update()
 {
+    float sampleRate = float(getSampleRate());
+
+    float decayTime = envDecayParam->get() / 100.0f * 5.0f;
+    float decaySamples = sampleRate * decayTime;
+    synth.envDecay = std::exp(std::log(SILENCE) / decaySamples);
+
     float noiseMix = noiseParam->get() / 100.0f;
     noiseMix *= noiseMix;
     synth.noiseMix = noiseMix * 0.06f;
