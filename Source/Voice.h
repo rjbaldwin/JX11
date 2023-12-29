@@ -24,6 +24,8 @@ struct Voice
         note = 0;
         osc.reset();
         saw = 0.0f;
+
+        env.reset();
     }
 
     float render(float input)

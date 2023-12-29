@@ -98,13 +98,24 @@ void Synth::noteOn(int note, int velocity)
     voice.osc.reset();
     voice.env.level = 1.0f;
     voice.env.multiplier = envDecay;
+    voice.env.target = 0.2f;
+
+    Envelope& env = voice.env;
+    env.attackMultiplier = envAttack;
+    env.decayMultiplier = envDecay;
+    env.sustainLevel = envSustain;
+    env.releaseMultiplier = envRelease;
+
+    env.level = 1.0f;
+    env.target = env.sustainLevel;
+    env.multiplier = env.decayMultiplier;
 }
 
 void Synth::noteOff(int note)
 {
-   /* if (voice.note == note)
+    if (voice.note == note)
     {
         voice.note = 0;
        
-    }*/
+    }
 }

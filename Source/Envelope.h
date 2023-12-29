@@ -17,11 +17,25 @@ class Envelope
 public:
     float nextValue()
     {
-        level *= multiplier;
+        level = multiplier * (level - target) + target;
         return level;
+    }
+
+    void reset()
+    {
+        level = 0.0f;
+        target = 0.0f;
+        multiplier = 0.0f;
     }
 
     float level;
     float multiplier;
+    float target;
+
+    float attackMultiplier;
+    float decayMultiplier;
+    float sustainLevel;
+    float releaseMultiplier;
+
 
 };

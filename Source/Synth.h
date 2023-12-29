@@ -26,7 +26,10 @@ public:
     void midiMessage(uint8_t data0, uint8_t data1, uint8_t data2);
 
     float noiseMix;
+    float envAttack;
     float envDecay;
+    float envSustain;
+    float envRelease;
 
 private:
     float sampleRate;
