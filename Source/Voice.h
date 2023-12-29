@@ -38,4 +38,10 @@ struct Voice
 
         return output * envelope;
     }
+
+    void release()
+    {
+        env.release();
+    }
+
 };

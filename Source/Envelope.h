@@ -28,6 +28,17 @@ public:
         multiplier = 0.0f;
     }
 
+    void release()
+    {
+        target = 0.0f;
+        multiplier = releaseMultiplier;
+    }
+
+    inline bool isActive() const
+    {
+        return level > SILENCE;
+    }
+
     float level;
     float multiplier;
     float target;

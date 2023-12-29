@@ -45,10 +45,16 @@ void Synth::render(float** outputBuffers, int sampleCount)
 
         // 3
         float output = 0.0f;
-        if (voice.note > 0)
+        if (voice.env.isActive())
         {
             output = voice.render(noise);
         }
+
+        if (!voice.env.isActive())
+        {
+            voice.env.reset();
+        }
+
         // 5
         outputBufferLeft[sample] = output;
         if (outputBufferRight != nullptr)
@@ -115,7 +121,7 @@ void Synth::noteOff(int note)
 {
     if (voice.note == note)
     {
-        voice.note = 0;
+        voice.release();
        
     }
 }
