@@ -30,6 +30,8 @@ public:
     float envDecay;
     float envSustain;
     float envRelease;
+    float oscMix;
+    float detune;
 
 private:
     float sampleRate;

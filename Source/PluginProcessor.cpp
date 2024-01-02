@@ -535,6 +535,11 @@ void JX11AudioProcessor::update()
     float noiseMix = noiseParam->get() / 100.0f;
     noiseMix *= noiseMix;
     synth.noiseMix = noiseMix * 0.06f;
+    synth.oscMix = oscMixParam->get() / 100.0f;
+
+    float semi = oscTuneParam->get();
+    float cent = oscFineParam->get();
+    synth.detune = std::pow(1.059463094359f, -semi - 0.01f * cent);
 }
 
 void JX11AudioProcessor::createPrograms()

@@ -37,6 +37,8 @@ void Synth::render(float** outputBuffers, int sampleCount)
     float* outputBufferLeft = outputBuffers[0];
     float* outputBufferRight = outputBuffers[1];
 
+    voice.osc1.period = voice.period;
+    voice.osc2.period = voice.osc1.period * detune;
     // 1
     for (int sample = 0; sample < sampleCount; ++sample)
     {
@@ -98,10 +100,14 @@ void Synth::noteOn(int note, int velocity)
 {
     voice.note = note;
     float freq = 440.0f * std::exp2(float(note - 69) / 12.0f);
-
-    voice.osc.amplitude = (velocity / 127.0f) * 0.5f;
-    voice.osc.period = sampleRate / freq;
-    voice.osc.reset();
+    voice.period = sampleRate / freq;
+    // activate the first oscillator 
+    voice.osc1.amplitude = (velocity / 127.0f) * 0.5f;
+    // voice.osc1.reset();
+    // 
+    // activate the second oscillator
+    voice.osc2.amplitude = voice.osc1.amplitude * oscMix;
+    // voice.osc2.reset();
     
     Envelope& env = voice.env;
     env.attackMultiplier = envAttack;
