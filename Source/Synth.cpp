@@ -46,24 +46,35 @@ void Synth::render(float** outputBuffers, int sampleCount)
         // 2
         float noise = noiseGen.nextValue() * noiseMix;
 
-        // 3
-        float output = 0.0f;
+        // page 232
+        float outputLeft = 0.0f;
+        float outputRight = 0.0f;
+
         if (voice.env.isActive())
         {
-            output = voice.render(noise);
+            float output = voice.render(noise);
+            outputLeft += output * voice.panLeft;
+            outputRight += output * voice.panRight;
         }
+
+        if (outputBufferRight != nullptr)
+        {
+            outputBufferLeft[sample] = outputLeft;
+            outputBufferRight[sample] = outputRight;
+        }
+        else
+        {
+            outputBufferLeft[sample] = (outputLeft + outputRight) * 0.5f;
+        }
+
+
 
         if (!voice.env.isActive())
         {
             voice.env.reset();
         }
 
-        // 5
-        outputBufferLeft[sample] = output;
-        if (outputBufferRight != nullptr)
-        {
-            outputBufferRight[sample] = output;
-        }
+     
     }
 
     protectYourEars(outputBufferLeft, sampleCount);
@@ -103,6 +114,7 @@ void Synth::midiMessage(uint8_t data0, uint8_t data1, uint8_t data2)
 void Synth::noteOn(int note, int velocity)
 {
     voice.note = note;
+    voice.updatePanning();
     float period = calcPeriod(note);
     voice.period = period;
     // activate the first oscillator 
