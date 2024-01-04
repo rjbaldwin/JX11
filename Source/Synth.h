@@ -34,14 +34,21 @@ public:
     float detune;
     float tune;
 
+    static constexpr int MAX_VOICES = 16;
+    int numVoices;
+
 private:
     float sampleRate;
-    Voice voice;
+    //Voice voice;
+    std::array<Voice, MAX_VOICES> voices;
 
     void noteOn(int note, int velocity);
     void noteOff(int note);
+    void startVoice(int v, int note, int velocity);
     NoiseGenerator noiseGen;
 
     float calcPeriod(int note) const;
     float pitchBend;
+
+
 };
