@@ -43,4 +43,5 @@ private:
     NoiseGenerator noiseGen;
 
     float calcPeriod(int note) const;
+    float pitchBend;
 };
