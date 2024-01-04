@@ -32,6 +32,7 @@ public:
     float envRelease;
     float oscMix;
     float detune;
+    float tune;
 
 private:
     float sampleRate;
@@ -40,4 +41,6 @@ private:
     void noteOn(int note, int velocity);
     void noteOff(int note);
     NoiseGenerator noiseGen;
+
+    float calcPeriod(int note) const;
 };
