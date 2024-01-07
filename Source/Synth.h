@@ -34,9 +34,10 @@ public:
     float oscMix;
     float detune;
     float tune;
-
-    static constexpr int MAX_VOICES = 8;
+    float volumeTrim;
+    static constexpr int MAX_VOICES = 16;
     int numVoices;
+
 
 private:
     void noteOn(int note, int velocity);

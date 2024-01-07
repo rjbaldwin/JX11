@@ -151,6 +151,17 @@ void Synth::controlChange(uint8_t data1, uint8_t data2)
             noteOff(SUSTAIN);
         }
         break;
+    default:
+        if (data1 >= 0x78)
+        {
+            for (int v = 0; v < MAX_VOICES; ++v)
+            {
+                voices[v].reset();
+            }
+            sustainPedalPressed = false;
+        }
+        break;
+
     }
 }
 
@@ -195,7 +206,7 @@ void Synth::startVoice(int v, int note, int velocity)
     voice.updatePanning();
     voice.period = period;
 
-    voice.osc1.amplitude = (velocity / 127.0f) * 0.5f;
+    voice.osc1.amplitude = volumeTrim * velocity;
     voice.osc2.amplitude = voice.osc1.amplitude * oscMix;
 
     Envelope& env = voice.env;
