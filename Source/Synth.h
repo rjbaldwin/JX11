@@ -24,6 +24,7 @@ public:
     void reset();
     void render(float** outputBuffers, int sampleCount);
     void midiMessage(uint8_t data0, uint8_t data1, uint8_t data2);
+    void controlChange(uint8_t data1, uint8_t data2);
 
     float noiseMix;
     float envAttack;
@@ -43,6 +44,7 @@ private:
     void startVoice(int v, int note, int velocity);
     float calcPeriod(int v, int note) const;
     int findFreeVoice() const;
+    bool sustainPedalPressed {false};
 
     float sampleRate;
     std::array<Voice, MAX_VOICES> voices;

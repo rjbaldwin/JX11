@@ -11,7 +11,8 @@
 #include "Synth.h"
 #include "Utils.h"
 
-static const float ANALOG = 0.002f;
+static const float ANALOG { 0.002f };
+static const int SUSTAIN { -1 };
 
 Synth::Synth()
 {
@@ -128,6 +129,28 @@ void Synth::midiMessage(uint8_t data0, uint8_t data1, uint8_t data2)
     case 0xE0:
         pitchBend = std::exp(-0.000014102f * float(data1 + 128 * data2 - 8192));
         break;
+
+    case 0xB0:
+        controlChange(data1, data2);
+        break;
+    }
+    
+
+}
+
+void Synth::controlChange(uint8_t data1, uint8_t data2)
+{
+    switch (data1)
+    {
+        // sustain pedal
+    case 0x40:
+        sustainPedalPressed = (data2 >= 64);
+
+        if (!sustainPedalPressed)
+        {
+            noteOff(SUSTAIN);
+        }
+        break;
     }
 }
 
@@ -149,9 +172,17 @@ void Synth::noteOff(int note)
     {
         if (voices[v].note == note)
         {
-            voices[v].release();
-            voices[v].note = 0;
+            if (sustainPedalPressed)
+            {
+                voices[v].note = SUSTAIN;
+            } 
+            else
+            {
+                voices[v].release();
+                voices[v].note = 0;
+            }
         }
+       
     }
 }
 
