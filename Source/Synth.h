@@ -37,7 +37,7 @@ public:
     float volumeTrim;
     static constexpr int MAX_VOICES = 16;
     int numVoices;
-
+    juce::LinearSmoothedValue<float> outputLevelSmoother;
 
 private:
     void noteOn(int note, int velocity);
@@ -46,6 +46,7 @@ private:
     float calcPeriod(int v, int note) const;
     int findFreeVoice() const;
     bool sustainPedalPressed {false};
+    void restartMonoVoice(int note, int velocity);
 
     float sampleRate;
     std::array<Voice, MAX_VOICES> voices;

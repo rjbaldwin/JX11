@@ -45,6 +45,7 @@ void Synth::render(float** outputBuffers, int sampleCount)
     float* outputBufferLeft = outputBuffers[0];
     float* outputBufferRight = outputBuffers[1];
 
+
     for (int v = 0; v < MAX_VOICES; ++v)
     {
         Voice& voice = voices[v];
@@ -76,6 +77,12 @@ void Synth::render(float** outputBuffers, int sampleCount)
                 outputRight += output * voice.panRight;
             }
         }
+
+        outputLevelSmoother.reset(sampleRate,0.05);
+        float outputLevel = outputLevelSmoother.getNextValue();
+
+        outputLeft *= outputLevel;
+        outputRight *= outputLevel;
 
         if (outputBufferRight != nullptr)
         {
@@ -169,7 +176,15 @@ void Synth::noteOn(int note, int velocity)
 {
     int v{ 0 }; // voice index. 0 = mono voice
 
-    if (numVoices > 1) // polyphonic
+    if (numVoices == 1) // polyphonic
+    {
+        if (voices[0].note > 0)
+        {
+            restartMonoVoice(note, velocity);
+            return;
+        }
+    }
+    else
     {
         v = findFreeVoice();
     }
@@ -239,4 +254,16 @@ int Synth::findFreeVoice() const
     }
 
     return v;
+}
+
+void Synth::restartMonoVoice(int note, int velocity)
+{
+    float period = calcPeriod(0, note);
+
+    Voice& voice = voices[0];
+    voice.period = period;
+
+    voice.env.level += SILENCE + SILENCE;
+    voice.note = note;
+    voice.updatePanning();
 }
