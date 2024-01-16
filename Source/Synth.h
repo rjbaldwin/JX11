@@ -47,6 +47,9 @@ private:
     int findFreeVoice() const;
     bool sustainPedalPressed {false};
     void restartMonoVoice(int note, int velocity);
+    void shiftQueuedNotes();
+    
+    int nextQueuedNote();
 
     float sampleRate;
     std::array<Voice, MAX_VOICES> voices;

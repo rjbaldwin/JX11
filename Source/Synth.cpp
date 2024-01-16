@@ -180,6 +180,7 @@ void Synth::noteOn(int note, int velocity)
     {
         if (voices[0].note > 0)
         {
+            shiftQueuedNotes();
             restartMonoVoice(note, velocity);
             return;
         }
@@ -194,6 +195,15 @@ void Synth::noteOn(int note, int velocity)
 
 void Synth::noteOff(int note)
 {
+    if ((numVoices == 1) && (voices[0].note == note))
+    {
+        int queuedNote = nextQueuedNote();
+        if (queuedNote > 0)
+        {
+            restartMonoVoice(queuedNote, -1);
+        }
+    }
+
     for (int v = 0; v < MAX_VOICES; v++)
     {
         if (voices[v].note == note)
@@ -266,4 +276,33 @@ void Synth::restartMonoVoice(int note, int velocity)
     voice.env.level += SILENCE + SILENCE;
     voice.note = note;
     voice.updatePanning();
+}
+
+void Synth::shiftQueuedNotes()
+{
+    for (int tmp = MAX_VOICES - 1; tmp > 0; tmp--)
+    {
+        voices[tmp].note = voices[tmp - 1].note;
+        //voices[tmp].release();  // this is meant to fix a bug but it seems to introduce it - page 262!
+    }
+}
+
+int Synth::nextQueuedNote()
+{
+    int held{ 0 };
+    for (int v = MAX_VOICES - 1; v > 0; v--)
+    {
+        if (voices[v].note > 0)
+        {
+            held = v;
+        }
+    }
+
+    if (held > 0)
+    {
+        int note = voices[held].note;
+        voices[held].note = 0;
+        return note;
+    }
+    return 0;
 }
