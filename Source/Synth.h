@@ -43,6 +43,7 @@ public:
     const int LFO_MAX{ 32 };
     float lfoInc;
     float vibrato;
+    float pwmDepth;
 
 private:
     void noteOn(int note, int velocity);
