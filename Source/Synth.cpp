@@ -38,6 +38,8 @@ void Synth::reset()
 
     noiseGen.reset();
     pitchBend = 1.0f;
+    lfo = 0.0f;
+    lfoStep = 0;
 }
 
 void Synth::render(float** outputBuffers, int sampleCount)
@@ -59,6 +61,7 @@ void Synth::render(float** outputBuffers, int sampleCount)
     // 1
     for (int sample = 0; sample < sampleCount; ++sample)
     {
+        updateLFO();
         // 2
         const float noise = noiseGen.nextValue() * noiseMix;
 
@@ -176,6 +179,8 @@ void Synth::noteOn(int note, int velocity)
 {
     int v{ 0 }; // voice index. 0 = mono voice
 
+    if (ignoreVelocity) { velocity = 80; }
+
     if (numVoices == 1) // polyphonic
     {
         if (voices[0].note > 0)
@@ -231,7 +236,8 @@ void Synth::startVoice(int v, int note, int velocity)
     voice.updatePanning();
     voice.period = period;
 
-    voice.osc1.amplitude = volumeTrim * velocity;
+    float vel = 0.004f * float((velocity + 64) * (velocity + 64)) - 8.0f;
+    voice.osc1.amplitude = volumeTrim * vel;
     voice.osc2.amplitude = voice.osc1.amplitude * oscMix;
 
     Envelope& env = voice.env;
@@ -283,7 +289,7 @@ void Synth::shiftQueuedNotes()
     for (int tmp = MAX_VOICES - 1; tmp > 0; tmp--)
     {
         voices[tmp].note = voices[tmp - 1].note;
-        //voices[tmp].release();  // this is meant to fix a bug but it seems to introduce it - page 262!
+        voices[tmp].release();  
     }
 }
 
@@ -305,4 +311,36 @@ int Synth::nextQueuedNote()
         return note;
     }
     return 0;
+}
+
+void Synth::updateLFO()
+{
+    // 1
+    if (--lfoStep <= 0)
+    {
+        lfoStep = LFO_MAX;
+
+        // 2
+        lfo += lfoInc;
+        if (lfo > PI)
+        {
+            lfo -= TWO_PI;
+        }
+
+        // 3
+        const float sine = std::sin(lfo);
+
+        // 4
+        float vibratoMod = 1.0f + sine * 0.2f;
+
+        for (int v = 0; v < MAX_VOICES; ++v)
+        {
+            Voice& voice = voices[v];
+            if (voice.env.isActive())
+            {
+                voice.osc1.modulation = vibratoMod;
+                voice.osc2.modulation = vibratoMod;
+            }
+        }
+    }
 }

@@ -35,9 +35,13 @@ public:
     float detune;
     float tune;
     float volumeTrim;
-    static constexpr int MAX_VOICES = 16;
+    static constexpr int MAX_VOICES{ 16 };
     int numVoices;
     juce::LinearSmoothedValue<float> outputLevelSmoother;
+    float velocitySensitivity;
+    bool ignoreVelocity;
+    const int LFO_MAX{ 32 };
+    float lfoInc;
 
 private:
     void noteOn(int note, int velocity);
@@ -48,13 +52,16 @@ private:
     bool sustainPedalPressed {false};
     void restartMonoVoice(int note, int velocity);
     void shiftQueuedNotes();
-    
     int nextQueuedNote();
+    void updateLFO();
+
 
     float sampleRate;
     std::array<Voice, MAX_VOICES> voices;
     NoiseGenerator noiseGen;
     float pitchBend;
+    int lfoStep;
+    float lfo;
 
     
 

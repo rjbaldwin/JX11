@@ -547,6 +547,23 @@ void JX11AudioProcessor::update()
     synth.numVoices = (polyModeParam->getIndex() == 0) ? 1 : Synth::MAX_VOICES;
     synth.volumeTrim = 0.0008f * (3.2f - synth.oscMix - 25.0f * synth.noiseMix) * 1.5f;
     synth.outputLevelSmoother.setTargetValue( juce::Decibels::decibelsToGain(outputLevelParam->get()));
+
+    float filterVelocity = filterVelocityParam->get();
+    if (filterVelocity < -90.0f)
+    {
+        synth.velocitySensitivity = 0.0f;
+        synth.ignoreVelocity = true;
+    }
+    else
+    {
+        synth.velocitySensitivity = 0.0005f * filterVelocity;
+        synth.ignoreVelocity = false;
+    }
+
+    const float inverseUpdateRate = inverseSampleRate * synth.LFO_MAX;
+
+    float lfoRate = std::exp(7.0f * lfoRateParam->get() - 4.0f);
+    synth.lfoInc = lfoRate * inverseUpdateRate * float(TWO_PI);
 }
 
 void JX11AudioProcessor::createPrograms()
