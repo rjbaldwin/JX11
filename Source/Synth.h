@@ -45,6 +45,10 @@ public:
     float vibrato;
     float pwmDepth;
 
+    int glideMode;
+    float glideRate;
+    float glideBend;
+
 private:
     void noteOn(int note, int velocity);
     void noteOff(int note);
@@ -56,6 +60,13 @@ private:
     void shiftQueuedNotes();
     int nextQueuedNote();
     void updateLFO();
+    bool isPlayingLegatoStyle() const;
+
+    inline void updatePeriod(Voice& voice)
+    {
+        voice.osc1.period = voice.period * pitchBend;
+        voice.osc2.period = voice.osc1.period * detune;
+    }
 
 
     float sampleRate;
@@ -64,6 +75,8 @@ private:
     float pitchBend;
     int lfoStep;
     float lfo;
+    float modWheel;
+    int lastNote;
 
     
 
