@@ -19,9 +19,14 @@ Synth::Synth()
     sampleRate = 44100.0f;
 }
 
-void Synth::allocateResources(double sampleRate_, int samplesPerBlock)
+void Synth::allocateResources(double sampleRate_, int /*samplesPerBlock*/)
 {
     sampleRate = static_cast<float>(sampleRate_);
+
+    for (int v = 0; v < MAX_VOICES; ++v)
+    {
+        voices[v].filter.sampleRate = sampleRate;
+    }
 }
 
 void Synth::deallocateResources()
@@ -105,6 +110,7 @@ void Synth::render(float** outputBuffers, int sampleCount)
             if (!voice.env.isActive())
             {
                 voice.env.reset();
+                voice.filter.reset();
             }
         }
     }

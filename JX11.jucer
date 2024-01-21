@@ -5,6 +5,7 @@
               companyEmail="info@rjbaldwin.com" pluginFormats="buildVST3" pluginCharacteristicsValue="pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn">
   <MAINGROUP id="S4Zy8S" name="JX11">
     <GROUP id="{B6AA4238-5FD1-E662-395C-73132C1D9430}" name="Source">
+      <FILE id="NPT1tx" name="Filter.h" compile="0" resource="0" file="Source/Filter.h"/>
       <FILE id="gsSJc3" name="Envelope.h" compile="0" resource="0" file="Source/Envelope.h"/>
       <FILE id="a3EXBQ" name="Utils.h" compile="0" resource="0" file="Source/Utils.h"/>
       <FILE id="DSOMPJ" name="Oscillator.h" compile="0" resource="0" file="Source/Oscillator.h"/>
