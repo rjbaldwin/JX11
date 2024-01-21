@@ -21,7 +21,7 @@ public:
     {
         g = std::tan(PI * cutoff / sampleRate);
         k = 1.0f / Q;
-        a1 = 1.0f / (1.0f + 1.0f * (g + k));
+        a1 = 1.0f / (1.0f + g * (g + k));
         a2 = g * a1;
         a3 = g * a2;
     }

@@ -48,6 +48,8 @@ public:
     int glideMode;
     float glideRate;
     float glideBend;
+    float filterKeyTracking;
+    float filterQ;
 
 private:
     void noteOn(int note, int velocity);
@@ -77,6 +79,7 @@ private:
     float lfo;
     float modWheel;
     int lastNote;
+    float resonanceCtl;
 
     
 
