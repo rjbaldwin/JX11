@@ -28,6 +28,7 @@ struct Voice
     float cutoff;
     float filterMod;
     float filterQ;
+    float pitchBend;
 
     void reset()
     {
@@ -69,9 +70,10 @@ struct Voice
 
     void updateLFO()
     {
-        float modulatedCutoff = cutoff * std::exp(filterMod);
+        float modulatedCutoff = cutoff * std::exp(filterMod) / pitchBend;
         modulatedCutoff = std::clamp(modulatedCutoff, 30.0f, 20000.0f);
         filter.updateCoefficients(modulatedCutoff, filterQ);
+        
     }
 
 };

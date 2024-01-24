@@ -50,6 +50,7 @@ public:
     float glideBend;
     float filterKeyTracking;
     float filterQ;
+    float filterLFODepth;
 
 private:
     void noteOn(int note, int velocity);
@@ -80,10 +81,8 @@ private:
     float modWheel;
     int lastNote;
     float resonanceCtl;
-
-    
-
-    
-
+    float pressure;
+    float filterCtl;
+    float filterZip;
 
 };

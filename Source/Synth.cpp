@@ -47,6 +47,9 @@ void Synth::reset()
     lfoStep = 0;
     modWheel = 0.0f;
     resonanceCtl = 1.0f;
+    pressure = 0.0f;
+    filterCtl = 0.0f;
+    filterZip = 0.0f;
 }
 
 void Synth::render(float** outputBuffers, int sampleCount)
@@ -63,6 +66,7 @@ void Synth::render(float** outputBuffers, int sampleCount)
             updatePeriod(voice);
             voice.glideRate = glideRate;
             voice.filterQ = filterQ * resonanceCtl;
+            voice.pitchBend = pitchBend;
         }
     }
 
@@ -145,25 +149,24 @@ void Synth::midiMessage(uint8_t data0, uint8_t data1, uint8_t data2)
         }
         break;
     }
+        // Pitchbend
     case 0xE0:
         pitchBend = std::exp(-0.000014102f * float(data1 + 128 * data2 - 8192));
         break;
 
+        // control change
     case 0xB0:
         controlChange(data1, data2);
         break;
 
-        //  resonance
-    case 0x47:
-        resonanceCtl = 154.0f / float(154 - data2);
+        // channel aftertouch
+    case 0xD0:
+        pressure = 0.0001f * float(data1 * data1);
         break;
 
    
     }
     
-
-    
-
 }
 
 void Synth::controlChange(uint8_t data1, uint8_t data2)
@@ -193,6 +196,21 @@ void Synth::controlChange(uint8_t data1, uint8_t data2)
             }
             sustainPedalPressed = false;
         }
+        break;
+        
+        // Resonance
+    case 0x47:
+    resonanceCtl = 154.0f / float(154 - data2);
+    break;
+
+        // Filter +
+    case 0x4A:
+        filterCtl = 0.02f * float(data2);
+        break;
+
+        // Filter -
+    case 0x4B:
+        filterCtl = -0.03f * float(data2);
         break;
    
     }
@@ -385,7 +403,9 @@ void Synth::updateLFO()
         // 4
         float vibratoMod = 1.0f + sine * (modWheel + vibrato);
         float pwm = 1.0f + sine * (modWheel + pwmDepth);
-        float filterMod = filterKeyTracking;
+        float filterMod = filterKeyTracking + filterCtl + (filterLFODepth + pressure) * sine;
+
+        filterZip += 0.005f * (filterMod - filterZip);
 
         for (int v = 0; v < MAX_VOICES; ++v)
         {
@@ -394,7 +414,7 @@ void Synth::updateLFO()
             {
                 voice.osc1.modulation = vibratoMod;
                 voice.osc2.modulation = pwm;
-                voice.filterMod = filterMod;
+                voice.filterMod = filterZip;
                 voice.updateLFO();
                 updatePeriod(voice);
             }
