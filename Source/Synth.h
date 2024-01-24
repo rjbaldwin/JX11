@@ -51,6 +51,8 @@ public:
     float filterKeyTracking;
     float filterQ;
     float filterLFODepth;
+    float filterAttack, filterDecay, filterSustain, filterRelease;
+    float filterEnvDepth;
 
 private:
     void noteOn(int note, int velocity);

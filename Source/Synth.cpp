@@ -67,6 +67,7 @@ void Synth::render(float** outputBuffers, int sampleCount)
             voice.glideRate = glideRate;
             voice.filterQ = filterQ * resonanceCtl;
             voice.pitchBend = pitchBend;
+            voice.filterEnvDepth = filterEnvDepth;
         }
     }
 
@@ -314,6 +315,13 @@ void Synth::startVoice(int v, int note, int velocity)
     {
         voice.cutoff *= std::exp(velocitySensitivity * float(velocity - 64));
     }
+
+    Envelope& filterEnv = voice.filterEnv;
+    filterEnv.attackMultiplier = filterAttack;
+    filterEnv.decayMultiplier = filterDecay;
+    filterEnv.sustainLevel = filterSustain;
+    filterEnv.releaseMultiplier = filterRelease;
+    filterEnv.attack();
 }
 
 float Synth::calcPeriod(int v, int note) const
