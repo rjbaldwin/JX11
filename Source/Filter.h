@@ -11,8 +11,11 @@
 #pragma once
 
 #include <complex>
+#include <JuceHeader.h>
 
-class Filter
+// deprecated for now!
+// Cytomic SVF filter
+class OldFilter
 {
 public:
     float sampleRate;
@@ -52,4 +55,27 @@ private:
     const float PI = 3.1415926535897932f;
     float g, k, a1, a2, a3; // filter coefficients
     float ic1eq, ic2eq; // internal state
+};
+
+// Moog style ladder filter from chapter end of 12
+
+class Filter : public juce::dsp::LadderFilter<float>
+{
+public:
+   
+    void updateCoefficients(float cutoff, float Q)
+    {
+        setCutoffFrequencyHz(cutoff);
+        setResonance(std::clamp(Q / 30.0f, 0.0f, 1.0f));
+    }
+
+
+    float render(float x)
+    {
+        updateSmoothers();
+        return processSample(x, 0);
+    }
+
+private:
+    
 };
