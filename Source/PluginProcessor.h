@@ -142,6 +142,8 @@ private:
     juce::AudioParameterChoice* polyModeParam;
     std::atomic<bool> parametersChanged{ false };
 
+    
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JX11AudioProcessor)
 };

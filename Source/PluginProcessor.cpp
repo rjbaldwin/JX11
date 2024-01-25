@@ -688,8 +688,12 @@ bool JX11AudioProcessor::hasEditor() const
 juce::AudioProcessorEditor* JX11AudioProcessor::createEditor()
 {
     auto editor = new juce::GenericAudioProcessorEditor(*this);
-    editor->setSize(500, 1050);
-    return editor;
+    // code for the generic editor
+    /*editor->setSize(500, 1050);
+    return editor;*/
+
+    // code for the custom editor 
+    return new JX11AudioProcessorEditor(*this);
 }
 
 //==============================================================================

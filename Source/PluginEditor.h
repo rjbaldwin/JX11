@@ -1,19 +1,12 @@
-/*
-  ==============================================================================
-
-    This file contains the basic framework code for a JUCE plugin editor.
-
-  ==============================================================================
-*/
 
 #pragma once
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
-//==============================================================================
-/**
-*/
+
+
+
 class JX11AudioProcessorEditor  : public juce::AudioProcessorEditor
 {
 public:
@@ -25,9 +18,15 @@ public:
     void resized() override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
     JX11AudioProcessor& audioProcessor;
+
+    using AVPTS = juce::AudioProcessorValueTreeState;
+    using SliderAttachment = AVPTS::SliderAttachment;
+
+    juce::Slider outputLevelKnob;
+    SliderAttachment outputLevelAttachment{ audioProcessor.apvts, ParameterID::outputLevel.getParamID(), outputLevelKnob };
+
+   
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JX11AudioProcessorEditor)
 };
