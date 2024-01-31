@@ -13,6 +13,7 @@
 #include "Preset.h"
 
 
+
 //==============================================================================
 
 namespace ParameterID
@@ -142,6 +143,7 @@ private:
     juce::AudioParameterFloat* outputLevelParam;
     juce::AudioParameterChoice* polyModeParam;
     std::atomic<bool> parametersChanged{ false };
+
 
     
 
